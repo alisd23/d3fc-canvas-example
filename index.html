@@ -1,10 +1,12 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <link rel="stylesheet" type="text/css" href="build/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 
   <body>
-    <div class="header">
+    <div id="header">
       <h1 class="title">D3FC Canvas Example</h1>
 
       <div class="options">
@@ -17,20 +19,24 @@
           <option value="5000">5000</option>
           <option value="10000">10000</option>
           <option value="20000">20000</option>
+          <option value="40000">40000</option>
         </select>
       </div>
+    </div>
+
+    <div id="charts">
+      <div class="charts-inner">
+        <div class="chart-wrapper">
+          <h2 class="chart-title">SVG</h2>
+          <svg id="svg" class="chart" height="400"></svg>
+        </div>
+
+        <div class="chart-wrapper">
+          <h2 class="chart-title">Canvas</h2>
+          <canvas id="canvas" class="chart" height="400"></canvas>
+        </div>
       </div>
-
-    <div class="chart-wrapper">
-      <h2 class="chart-title">SVG</h2>
-      <svg id="svg" class="chart" height="400"></svg>
     </div>
-
-    <div class="chart-wrapper">
-      <h2 class="chart-title">Canvas</h2>
-      <canvas id="canvas" class="chart" height="400"></canvas>
-    </div>
-
   </body>
 
   <script src="build/bundle.js"></script>

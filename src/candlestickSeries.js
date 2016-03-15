@@ -1,28 +1,31 @@
 import { candlestick } from 'd3fc-shape';
-import { scaleLinear, scaleTime } from 'd3-scale';
 import fc from 'd3fc';
+import d3 from 'd3';
 
 export default function() {
+  let xScale = d3.scale.identity();
+  let yScale = d3.scale.identity();
 
   function drawCanvas(data, generator, canvas) {
     const ctx = canvas.getContext('2d');
-    const drawCandlestick = generator.context(ctx);
+    generator.context(ctx);
 
     // Clear canvas
     canvas.width = canvas.width;
 
     ctx.beginPath();
-    drawCandlestick(data.up);
+    generator(data.up);
     ctx.strokeStyle = '#52CA52';
     ctx.stroke();
     ctx.closePath();
     ctx.beginPath();
-    drawCandlestick(data.down);
+    generator(data.down);
     ctx.strokeStyle = '#E6443B';
     ctx.stroke();
     ctx.closePath();
   }
   function drawSvg(data, generator, svg) {
+    generator.context(null);
     d3.select(svg).select("path.up")
       .datum(data.up)
       .attr("d", generator);
@@ -32,37 +35,26 @@ export default function() {
       .attr("d", generator);
   }
 
-  return function(selection) {
+  const generator = candlestick()
+    .x((d, i) => xScale(d.date))
+    .open((d) => yScale(d.open))
+    .high((d) => yScale(d.high))
+    .low((d) => yScale(d.low))
+    .close((d) => yScale(d.close));
+
+
+  var candlestickSeries = function(selection) {
+
     selection.each(function(data) {
       const element = this;
-
-      const xScale = scaleTime()
-        .range([0, element.clientWidth])
-        .domain(d3.extent(data.all, (d, i) => d.date));
-
-      const yScale = scaleLinear()
-        .range([element.clientHeight, 0])
-        .domain(fc.util
-          .extent()
-          .fields(['high', 'low'])
-          .pad(0.2)(data.all));
-
-      const generator = candlestick()
-        .x((d, i) => xScale(d.date))
-        .open((d) => yScale(d.open))
-        .high((d) => yScale(d.high))
-        .low((d) => yScale(d.low))
-        .close((d) => yScale(d.close));
-
       const event = d3.dispatch('zoom');
-
       const zoom = d3.behavior.zoom()
-        .on('zoom', function() {
-          event.zoom.call(this, xScale.domain(), yScale.domain());
-          draw(data, generator, element);
-        })
         .x(xScale)
-        .y(yScale);
+        .y(yScale)
+          .on('zoom', function() {
+            event.zoom.call(this, xScale.domain(), yScale.domain());
+            draw();
+          });
 
       d3.select(element).call(zoom);
 
@@ -76,4 +68,21 @@ export default function() {
       draw();
     });
   };
+
+  candlestickSeries.xScale = function(x) {
+    if (!x) {
+        return xScale;
+    }
+    xScale = x;
+    return candlestickSeries;
+  };
+  candlestickSeries.yScale = function(x) {
+    if (!x) {
+        return yScale;
+    }
+    yScale = x;
+    return candlestickSeries;
+  };
+
+  return candlestickSeries;
 };
