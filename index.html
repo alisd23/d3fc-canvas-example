@@ -4,28 +4,31 @@
   </head>
 
   <body>
-    <h1 class="title">D3FC Canvas Example</h1>
+    <div class="header">
+      <h1 class="title">D3FC Canvas Example</h1>
 
-    <div class="options">
-      <h5 class="small-caps">Number of points</h5>
-      <select id="points">
-        <option value="100">100</option>
-        <option value="500">500</option>
-        <option value="1000">1000</option>
-        <option value="2500">2500</option>
-        <option value="5000">5000</option>
-        <option value="10000">10000</option>
-      </select>
+      <div class="options">
+        <h5 class="small-caps">Number of points</h5>
+        <select selected="100" id="points">
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+          <option value="2500">2500</option>
+          <option value="5000">5000</option>
+          <option value="10000">10000</option>
+          <option value="20000">20000</option>
+        </select>
+      </div>
+      </div>
+
+    <div class="chart-wrapper">
+      <h2 class="chart-title">SVG</h2>
+      <svg id="svg" class="chart" height="400"></svg>
     </div>
 
     <div class="chart-wrapper">
-      <h3 class="chart-title">SVG</h3>
-      <svg id="svg" width="100%"></svg>
-    </div>
-
-    <div class="chart-wrapper">
-      <h3 class="chart-title">Canvas</h3>
-      <canvas id="canvas" width="100%"></canvas>
+      <h2 class="chart-title">Canvas</h2>
+      <canvas id="canvas" class="chart" height="400"></canvas>
     </div>
 
   </body>
