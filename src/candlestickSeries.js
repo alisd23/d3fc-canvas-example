@@ -56,7 +56,7 @@ export default function() {
     .low((d) => yScale(d.low))
     .close((d) => yScale(d.close));
 
-  var candlestickSeries = function(selection) {
+  const candlestickSeries = function(selection) {
 
     selection.each(function(data) {
       const element = this;
