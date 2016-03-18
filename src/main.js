@@ -47,10 +47,7 @@ window.addEventListener('load', function() {
 
     setScales(data);
 
-    const event = d3.dispatch('zoom');
-
     function handleZoom() {
-      event.zoom.call(this, xScale.domain(), yScale.domain());
       d3.select(this).call(series);
     }
 
@@ -58,7 +55,7 @@ window.addEventListener('load', function() {
       .x(xScale)
       .y(yScale)
       .on('zoom', handleZoom);
-      
+
     const canvasZoom = d3.behavior.zoom()
       .x(xScale)
       .y(yScale)
