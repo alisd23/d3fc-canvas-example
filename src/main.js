@@ -47,6 +47,28 @@ window.addEventListener('load', function() {
 
     setScales(data);
 
+    const event = d3.dispatch('zoom');
+
+    const svgZoom = d3.behavior.zoom()
+      .x(xScale)
+      .y(yScale)
+        .on('zoom', function() {
+          event.zoom.call(this, xScale.domain(), yScale.domain());
+          d3.select(this)
+            .call(series);
+        });
+    const canvasZoom = d3.behavior.zoom()
+      .x(xScale)
+      .y(yScale)
+        .on('zoom', function() {
+          event.zoom.call(this, xScale.domain(), yScale.domain());
+          d3.select(this)
+            .call(series);
+        });
+
+    d3.select(svgEl).call(svgZoom);
+    d3.select(canvasEl).call(canvasZoom);
+
     series
       .xScale(xScale)
       .yScale(yScale);
@@ -80,13 +102,16 @@ window.addEventListener('load', function() {
 
     xScale
       .range([0, width])
-      .domain(d3.extent(data, (d, i) => d.date));
+      .domain(fc.util
+        .extent()
+        .fields(['date'])(data)
+      );
     yScale
       .range([height, 0])
       .domain(fc.util
         .extent()
         .fields(['high', 'low'])
-        .pad(0.2)(data))
-          .range([height, 0]);
+        .pad(0.2)(data)
+      );
   }
 });

@@ -12,11 +12,6 @@ export default function() {
 
   /**
    * Use the generator with the given data to draw to the canvas
-   * @param  {Object[]} updata      - OHLC 'up' data
-   * @param  {Object[]} downData    - OHLC 'down' data
-   * @param  {Function} generator
-   * @param  {DOMElement} canvas
-   * @return {void}
    */
   function drawCanvas(upData, downData, generator, canvas) {
     const ctx = canvas.getContext('2d');
@@ -40,11 +35,6 @@ export default function() {
   }
   /**
    * Use the generator with the given data to draw to the SVG element
-   * @param  {Object[]} updata      - OHLC 'up' data
-   * @param  {Object[]} downData    - OHLC 'down' data
-   * @param  {Function} generator
-   * @param  {DOMElement} svg
-   * @return {void}
    */
   function drawSvg(upData, downData, generator, svg) {
     generator.context(null);
@@ -67,23 +57,11 @@ export default function() {
 
   /**
    * Render the candlestick chart on the given elements via a D3 selection
-   * @param  {Object} selection - D3 selection
-   * @return {void}
    */
   var candlestickSeries = function(selection) {
 
     selection.each(function(data) {
       const element = this;
-      const event = d3.dispatch('zoom');
-      const zoom = d3.behavior.zoom()
-        .x(xScale)
-        .y(yScale)
-          .on('zoom', function() {
-            event.zoom.call(this, xScale.domain(), yScale.domain());
-            draw();
-          });
-
-      d3.select(element).call(zoom);
 
       const upData = data.filter(d => d.open <= d.close);
       const downData = data.filter(d => d.open > d.close);
@@ -99,14 +77,18 @@ export default function() {
     });
   };
 
-  candlestickSeries.xScale = function(x) {
-    if (!x) return xScale;
-    xScale = x;
+  candlestickSeries.xScale = (...args) => {
+    if (!args.length) {
+        return xScale;
+    }
+    xScale = args[0];
     return candlestickSeries;
   };
-  candlestickSeries.yScale = function(x) {
-    if (!x) return yScale;
-    yScale = x;
+  candlestickSeries.yScale = (...args) => {
+    if (!args.length) {
+        return yScale;
+    }
+    yScale = args[0];
     return candlestickSeries;
   };
 
