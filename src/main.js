@@ -45,15 +45,15 @@ window.addEventListener('load', function() {
       .attr('width', width)
       .attr('height', height);
 
-      setScales(data);
+    setScales(data);
 
-      series
-        .xScale(xScale)
-        .yScale(yScale);
+    series
+      .xScale(xScale)
+      .yScale(yScale);
 
-      d3.selectAll('.chart')
-        .datum(data)
-        .call(series);
+    d3.selectAll('.chart')
+      .datum(data)
+      .call(series);
   }
 
   /**
@@ -65,15 +65,13 @@ window.addEventListener('load', function() {
     const ohlcDataGenerator = fc.data.random.financial()
         .startDate(new Date(2014, 1, 1));
 
-    const data = ohlcDataGenerator(count);
-
-    return {
-      all: data,
-      up: data.filter(d => d.open <= d.close),
-      down: data.filter(d => d.open > d.close)
-    };
+    return ohlcDataGenerator(count);
   }
 
+  /**
+   * Set the canvas height and then set the range and domains of the scales
+   * @param {Object[]} data   - OHLC data array
+   */
   function setScales(data) {
     const width = document.getElementById('charts').clientWidth;
     const height = svgEl.clientHeight;
@@ -82,13 +80,13 @@ window.addEventListener('load', function() {
 
     xScale
       .range([0, width])
-      .domain(d3.extent(data.all, (d, i) => d.date));
+      .domain(d3.extent(data, (d, i) => d.date));
     yScale
       .range([height, 0])
       .domain(fc.util
         .extent()
         .fields(['high', 'low'])
-        .pad(0.2)(data.all))
+        .pad(0.2)(data))
           .range([height, 0]);
   }
 });
