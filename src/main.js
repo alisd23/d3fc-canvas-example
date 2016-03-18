@@ -49,22 +49,20 @@ window.addEventListener('load', function() {
 
     const event = d3.dispatch('zoom');
 
+    function handleZoom() {
+      event.zoom.call(this, xScale.domain(), yScale.domain());
+      d3.select(this).call(series);
+    }
+
     const svgZoom = d3.behavior.zoom()
       .x(xScale)
       .y(yScale)
-        .on('zoom', function() {
-          event.zoom.call(this, xScale.domain(), yScale.domain());
-          d3.select(this)
-            .call(series);
-        });
+      .on('zoom', handleZoom);
+      
     const canvasZoom = d3.behavior.zoom()
       .x(xScale)
       .y(yScale)
-        .on('zoom', function() {
-          event.zoom.call(this, xScale.domain(), yScale.domain());
-          d3.select(this)
-            .call(series);
-        });
+      .on('zoom', handleZoom);
 
     d3.select(svgEl).call(svgZoom);
     d3.select(canvasEl).call(canvasZoom);
